@@ -2,6 +2,21 @@
 
 This package improves Emacs window system with window moving commands (not moving focus between windows) and window splitting commands that takes addtional options to edit a file or a buffer.
 
+## INSTALL
+
+If you have [marmalade][marmalade] and emacs24 installed, simply type
+
+    M-x package-install smart-window
+
+If you don't have marmalade installed, add these to your .emacs
+
+    (require 'package)
+    (add-to-list 'package-archives 
+        '("marmalade" . "http://marmalade-repo.org/packages/"))
+    (package-initialize)
+
+`M-x eval-buffer` to evaluate it, and then do `M-x package-refresh-contents` to load in the package listing.
+
 ## SYNOPSIS
 
 `smart-compile.el` provides the following commands
@@ -100,4 +115,5 @@ along with GNU Emacs; see the file COPYING.  If not, write to the
 Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 Boston, MA 02110-1301, USA.
 
+[marmalade]: http://marmalade-repo.org
 [gpl]: http://www.gnu.org/licenses/gpl.html
