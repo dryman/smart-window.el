@@ -4,7 +4,7 @@ This package improves Emacs window system with window moving commands (not movin
 
 ## INSTALL
 
-If you have [marmalade][marmalade] and emacs24 installed, simply type
+If you have [marmalade][marmalade] or [melpa][melpa] and emacs24 installed, simply type
 
     M-x package-install smart-window
 
@@ -23,7 +23,7 @@ If you don't have marmalade installed, add these to your .emacs
 
 ## SYNOPSIS
 
-`smart-compile.el` provides the following commands
+`smart-window.el` provides the following commands
 
     M-x smart-window-move
     M-x smart-window-buffer-split
@@ -120,4 +120,5 @@ Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 Boston, MA 02110-1301, USA.
 
 [marmalade]: http://marmalade-repo.org
+[melpa]: http://melpa.milkbox.net
 [gpl]: http://www.gnu.org/licenses/gpl.html
