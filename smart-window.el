@@ -4,7 +4,7 @@
 
 ;; Author: Felix Chern <idryman@gmail.com>
 ;; URL: https://github.com/dryman/smart-window.el
-;; Version: 0.5
+;; Version: 0.6
 ;; Created: Feb 12 2013
 ;; Keywords: window
 ;; Compatibility: Emacs 24 and above
@@ -47,6 +47,9 @@
 ;;   interactive function that asks you to choose a file and creates
 ;;   a new splitted window with coresponding file.
 
+;; C-x R runs the command smart-window-rotate, which is an interactive
+;;   function that rotates the windows downwards and rightwards
+
 ;; M-x sw-above allows you to split a window above the current window
 ;;   with the buffer you chose.
 
@@ -70,6 +73,7 @@
 (global-set-key (kbd "C-x w") 'smart-window-move)
 (global-set-key (kbd "C-x W") 'smart-window-buffer-split)
 (global-set-key (kbd "C-x M-w") 'smart-window-file-split)
+(global-set-key (kbd "C-x R") 'smart-window-rotate)
 (define-key (current-global-map) (kbd "C-x 2") (if smart-window-remap-keys 'sw-below 'split-window-below))
 (define-key (current-global-map) (kbd "C-x 3") (if smart-window-remap-keys 'sw-right 'split-window-right))
 
@@ -86,6 +90,17 @@ would be at the very top, using the full width of the screen."
       (let ((window (selected-window)))
     (select-window (split-window (frame-root-window) nil edge))
     (delete-window window)))
+
+(defun smart-window-rotate ()
+  "Rotate windows downwards and rightwards"
+  (interactive)
+  (let* ((window (selected-window))
+         (w-list (window-list))
+         (b-list (mapcar 'window-buffer w-list)))
+    (mapcar* 'set-window-buffer
+             w-list
+             (append (last b-list) (butlast b-list)))
+    (select-window (cadr w-list))))
 
 ;;;###autoload
 (defun smart-window-buffer-split (buffer-name)

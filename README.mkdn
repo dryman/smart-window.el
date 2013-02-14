@@ -28,6 +28,7 @@ If you don't have marmalade installed, add these to your .emacs
     M-x smart-window-move
     M-x smart-window-buffer-split
     M-x smart-window-file-split
+    M-x smart-window-rotate
     
     M-x sw-above
     M-x sw-below
@@ -39,6 +40,7 @@ and the following key bindings.
     C-x w   => smart-window-move
     C-x W   => smart-window-buffer-split
     C-x M-w => smart-window-file-split
+    C-x R   => smart-window-rotate
     C-x 2   => sw-below
     C-x 3   => sw-right
 
@@ -78,6 +80,34 @@ For example, if you chose `above`, then the current window would be at the very 
     +--------------+-------------+
 
 It works like closing the current window and attaching a new window to the top edge of the screen.
+
+### smart-window-rotate
+
+`smart-window-rotate` rotates the windows downwards and rightwards. It is bound to `C-x R`.
+
+    +----------------------------+
+    |                            |
+    |         W3 (current)       |
+    |                            |
+    +--------------+-------------+
+    |              |     W2      |
+    |      W1      +-------------+
+    |              |     W4      |
+    +--------------+-------------+
+    
+                   |
+          smart-window-rotate
+                   |
+                   V
+    +----------------------------+
+    |                            |
+    |             W4             |
+    |                            |
+    +--------------+-------------+
+    |              |     W1      |
+    |      W3      +-------------+
+    |  (current)   |     W2      |
+    +--------------+-------------+
 
 ### smart-window-buffer-split
 
