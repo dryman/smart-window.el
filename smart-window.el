@@ -30,6 +30,11 @@
 
 ;;; Commentary:
 
+;; This package improves Emacs window system with window moving
+;; commands (not moving focus between windows) and window
+;; splitting commands that takes addtional options to edit a file
+;; or a buffer.
+
 ;; C-x w runs the command smart-window-move, which is an interactive
 ;;   function that move the current window to specified directions
 ;;   (left/right/above/Below).
@@ -56,7 +61,7 @@
 
 ;; C-x 2 is bounded to sw-below.
 ;; C-x 3 is bounded to sw-right.
-;; To switch back to default keybindings, type the following code in .emacs
+;; To switch back to the default key bindings, use the following settings in .emacs
 ;;   (setq smart-window-remap-keys 0)
 
 ;;; Code:
