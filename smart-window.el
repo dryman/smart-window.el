@@ -3,44 +3,63 @@
 ;; Copyright (C) 2013 by Felix Chern
 
 ;; Author: Felix Chern <idryman@gmail.com>
-;; $Id: smart-windows.el 1 2013-02-11 dryman $
-;; Keywords: tools, unix
+;; URL: https://github.com/dryman/smart-window.el
+;; Version: 0.5
+;; Created: Feb 12 2013
+;; Keywords: window
 ;; Compatibility: Emacs 24 and above
 
-;; This file is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation; either version 2, or (at your option)
-;; any later version.
+;; This file is NOT part of GNU Emacs
 
-;; This file is distributed in the hope that it will be useful,
+;;; License:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+;;
+;; This program is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
-
+;;
 ;; You should have received a copy of the GNU General Public License
-;; along with GNU Emacs; see the file COPYING.  If not, write to
-;; the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-;; Boston, MA 02111-1307, USA.
+;; along with GNU Emacs; see the file COPYING.  If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+
+;;; Commentary:
+
+;; C-x w runs the command smart-window-move, which is an interactive
+;;   function that move the current window to specified directions
+;;   (left/right/above/Below).
+
+;; C-x W runs the command smart-window-buffer-split, which is an
+;;   interactive function that asks you to choose a buffer and creates
+;;   a new splitted window with coresponding buffer.
+
+;; C-x M-w runs the command smart-window-file-split, which is an
+;;   interactive function that asks you to choose a file and creates
+;;   a new splitted window with coresponding file.
+
+;; M-x sw-above allows you to split a window above the current window
+;;   with the buffer you chose.
+
+;; M-x sw-below allows you to split a window below the current window
+;;   with the buffer you chose.
+
+;; M-x sw-left allows you to split a window left to the current window
+;;   with the buffer you chose.
+
+;; M-x sw-right allows you to split a window right to the current window
+;;   with the buffer you chose.
+
+;; C-x 2 is bounded to sw-below.
+;; C-x 3 is bounded to sw-right.
+;; To switch back to default keybindings, type the following code in .emacs
+;;   (setq smart-window-remap-keys 0)
 
 ;;; Code:
-
-;; commands
-;; sw-split  need more design to be vim-like
-;; sw-vsplit
-;; sw-buffer-split
-;; sw-buffer-vsplit
-;; sw-move (left, right, above, below)
-
-;; (defvar smart-window-mode-hook nil)
-;; (defvar smart-window-mode-map
-;;   (let ((smart-window-map (make-keymap)))
-;;     (define-key 
-
-(defgroup smart-window nil
-  "vim-like window controlling system"
-  :group nil
-  :prefix "smart-window")
-
 (defvar smart-window-remap-keys t)
 
 (global-set-key (kbd "C-x w") 'smart-window-move)
@@ -50,19 +69,23 @@
 (define-key (current-global-map) (kbd "C-x 3") (if smart-window-remap-keys 'sw-right 'split-window-right))
 
 
-;; if some parameter...(global-set-key (kbd "C-x 2") 'sw-left)...
-
-
 ;;;###autoload
-(defun smart-window-move (dir)
+(defun smart-window-move (edge)
+  "Move the current window to the edge of the frame. The edge
+options are 'left/right/above/below', where 'below' is the default.
+
+For example, if you chose 'above', then the current window
+would be at the very top, using the full width of the screen."
   (interactive 
    (list (completing--direction "Move window: ")))
       (let ((window (selected-window)))
-    (select-window (split-window (frame-root-window) nil dir))
+    (select-window (split-window (frame-root-window) nil edge))
     (delete-window window)))
 
 ;;;###autoload
 (defun smart-window-buffer-split (buffer-name)
+  "Split the current window, where new window content is not current
+buffer but the buffer you picked from the minibuffer prompt."
   (interactive "BSelect buffer: ")
   (smart-window--split
    buffer-name
@@ -70,6 +93,8 @@
 
 ;;;###autoload
 (defun smart-window-file-split (file-name)
+  "Split the current window, where new window content is not current
+buffer but the file you picked form the minibuffer prompt."
   (interactive "FSelect file: ")
   (smart-window--split
    (find-file-noselect file-name)
@@ -77,21 +102,29 @@
 
 ;;;###autoload
 (defun sw-below (buffer-name)
+  "Split current window with new window at below. The new window
+content is the buffer you picked from the minibuffer prompt."
   (interactive "BSelect buffer: ")
   (smart-window--split buffer-name 'below))
 
 ;;;###autoload
 (defun sw-above (buffer-name)
+  "Split current window with new window at above. The new window
+content is the buffer you picked from the minibuffer prompt."
   (interactive "BSelect buffer: ")
   (smart-window--split buffer-name 'above))
 
 ;;;###autoload
 (defun sw-left (buffer-name)
+  "Split current window with new window left to the current one.
+The new window content is the buffer you picked from the minibuffer prompt."
   (interactive "BSelect buffer: ")
   (smart-window--split buffer-name 'left))
 
 ;;;###autoload
 (defun sw-right (buffer-name)
+  "Split current window with new window right next to current one.
+The new window content is the buffer you picked from the minibuffer prompt."
   (interactive "BSelect buffer: ")
   (smart-window--split buffer-name 'right))
 
@@ -99,17 +132,16 @@
 ;; internal functions
 
 (defun smart-window--split (buffer-name dir)
+  "Internal function that splits the window with given direction and buffer name"
   (set-window-buffer (select-window (split-window nil nil dir)) buffer-name))
 
 (defun completing--direction (prompt)
+  "Internal function that handles minibuffer input.
+It returns symbols 'left 'right 'above or 'below."
   (intern (completing-read
            (concat prompt " (left/right/above/Below) ")
            (split-string "left right above below")
            nil t nil nil "below")))
 
-
-
 (provide 'smart-window)
-
-
 ;;; smart-window.el ends here
