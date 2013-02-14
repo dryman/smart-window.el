@@ -1,4 +1,4 @@
-# smart-compile v0.5 (beta)
+# smart-window v0.5 (beta)
 
 This package improves Emacs window system with window moving commands (not moving focus between windows) and window splitting commands that takes addtional options to edit a file or a buffer.
 
