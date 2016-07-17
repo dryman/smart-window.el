@@ -8,6 +8,7 @@
 ;; Created: Feb 12 2013
 ;; Keywords: window
 ;; Compatibility: Emacs 24 and above
+;; Package-Requires: ((cl-lib "0.5"))
 
 ;; This file is NOT part of GNU Emacs
 
@@ -68,8 +69,10 @@
 ;;   (setq smart-window-remap-keys 0)
 
 ;;; Code:
-(defvar smart-window-remap-keys t)
 
+(require 'cl-lib)
+
+(defvar smart-window-remap-keys t)
 (global-set-key (kbd "C-x w") 'smart-window-move)
 (global-set-key (kbd "C-x W") 'smart-window-buffer-split)
 (global-set-key (kbd "C-x M-w") 'smart-window-file-split)
@@ -97,7 +100,7 @@ would be at the very top, using the full width of the screen."
   (let* ((window (selected-window))
          (w-list (window-list))
          (b-list (mapcar 'window-buffer w-list)))
-    (mapcar* 'set-window-buffer
+    (cl-mapcar 'set-window-buffer
              w-list
              (append (last b-list) (butlast b-list)))
     (select-window (cadr w-list))))
